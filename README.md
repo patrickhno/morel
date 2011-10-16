@@ -2,6 +2,8 @@
 
 Morel is a mongodb JavaScript AST manager for Ruby.
 
+Currently work in progress and not useable to anyone.
+
 ## Example
 
 	[1,2,3,4,5,1,2,3,4,5,6,1,2,3,4,5,6,7].each do |v|
