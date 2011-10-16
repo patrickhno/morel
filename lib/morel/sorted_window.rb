@@ -13,119 +13,6 @@ module Morel
     
     # this code will be translated to javascript
     @@code = lambda do |collection|
-=begin
-      # list node for our linked list of key value pairs
-      def Node k,v
-        @next = nil
-        @prev = nil
-        @k    = nil
-        @v    = nil
-      end
-      
-      sorted_window = {
-        max:  30,
-        list: [],  # all the nodes sorted
-
-        # search for a given key value pair
-        find: lambda{ |k,v|
-          # first search for the key
-          beg = 0
-          lst = @list.length-1
-          mid = (beg+lst)>>1
-          while true
-            if k<@list[mid][:k]
-              lst=mid
-            else
-              beg=mid
-            end
-            mid = (beg+lst)>>1
-            break if mid==beg
-          end
-
-          # may not be exact match (multiple of same key value), searh in both directions for a exact match
-          start = mid
-          dir = 1
-          while v != @list[mid][:v]
-            mid += dir
-            if mid == @list.length
-              # end reached, flip direction and start over
-              mid = start
-              dir =- 1
-            end
-          end
-
-          # found
-          return mid
-        },
-
-        # add a new key value pair to the window (its linked list)
-        add: lambda{ |k,v|
-          if @list.length
-
-            beg = 0
-            lst = @list.length-1
-            mid = (beg+lst)>>1
-
-            # just add it to the end of our linked list
-            n = Node.new(k,v)
-            @last.next = n
-            n.prev = @last
-            @last = n
-
-            # and insert it at the correct place in our sorted list
-            if k>=@list[lst][:k]
-              @list.push(n)
-            else
-              while true
-                if k<@list[mid][:k]
-                  lst=mid
-                else
-                  beg=mid
-                end
-                mid = (beg+lst)>>1
-                break if mid==beg
-              end
-
-              if k<@list[mid][:k]
-                if @list.length >= @max && mid==0
-                  # we got a new winner, so anounce it
-                  #print(tojson(this.list[mid].v));
-                  emit(@list[mid][:v][:date],@list[mid][:v])
-                end
-                @list.splice(mid,0,n)
-              elsif k<@list[lst][:k]
-                @list.splice(lst,0,n)
-              else
-                #print("!!!");
-                #print(k);
-                #print(this.list[mid].k);
-                #print(this.list[end].k);
-                while true
-                end
-              end
-            end
-
-            # dont let the window grow larger then its size
-            if @list.length > @max
-              # remove first
-              @list.splice(this.find(@first[:k],@first[:v]),1)
-              @first[:next].prev = nil
-              @first = @first[:next]
-            end
-          else
-            # the list is empty, just push it
-            @last = Node.new(k,v)
-            @first = @last
-            @list.push(@last)
-          end
-        }
-      }
-
-      collection.forEach(lambda{ |day|
-          sorted_window.add(day.page_views,item);
-        }
-      )
-=end
       lambda{ |k,v|
         unless window
           # list node for our linked list of key value pairs
@@ -137,7 +24,6 @@ module Morel
           end
 
           window = {
-            n: 0,
             last: nil,
             list: [],  # all the nodes sorted
 
