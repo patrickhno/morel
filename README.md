@@ -2,7 +2,7 @@
 
 Morel is a mongodb JavaScript AST manager for Ruby.
 
-Currently work in progress and not useable to anyone.
+Currently work in progress and not usefull to anyone.
 
 ## Example
 
