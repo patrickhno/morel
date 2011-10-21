@@ -130,29 +130,15 @@ module Morel
       }
     end
 
-    @@reduction = Goling::Reduction.new(
-      :returns  => 'something',
-      :lang     => :js,
-      :inline   => :false,
-      :location => @@code.source_location[0],
-      :line     => @@code.source_location[1],
-      :regexp   => //.inspect,
-      :args     => [],
-      :sexp     => @@code.to_sexp
-    )
-
     def initialize params
       @collection = params[:collection]
       @size       = params[:size]
       @block      = params[:block]
     end
-    
+
     def each_top
       unless @map
-        sexy = @@reduction.compile_with_return_to_var(nil)
-        clone = Marshal.load(Marshal.dump(sexy.first)) # sexy is not cleanly duplicated
-        @@reduction.replace_variable_references(clone,Goling::Replacement.new(:sexp => @collection.name),:collection)
-        @map = Ruby2Js.new.process(clone).gsub(/window\(\)/,'window').gsub(/Node\(k, v\){/,'function Node(k, v){').gsub(/:max/,'max')
+        @map = Ruby2Js.new.process(@@code.to_code(@collection)).gsub(/window\(\)/,'window').gsub(/Node\(k, v\){/,'function Node(k, v){').gsub(/:max/,'max')
         @collection.db.add_stored_function('hello',@map)
         @map = "hello(this._id,this);"
       end
