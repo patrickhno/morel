@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'goling'
-
 module Morel
 
   class Collection
