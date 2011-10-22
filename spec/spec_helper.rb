@@ -1,8 +1,4 @@
-#$LOAD_PATH.unshift(File.dirname(__FILE__))
-#$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-#require 'arel-mongo'
-#require 'spec'
-#require 'spec/autorun'
+# encoding: utf-8
 
 require 'mongo'
 require 'morel'
