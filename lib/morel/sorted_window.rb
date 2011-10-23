@@ -10,9 +10,14 @@ module Morel
 
   class SortedWindow    
     
-    # this code will be translated to javascript
-    @@code = lambda do |collection|
-      lambda{ |k,v|
+    def initialize params
+      @collection = params[:collection]
+      @size       = params[:size]
+      @block      = params[:block]
+    end
+
+    def each_top
+      @collection.find(:scope => { :window => nil, :max => @size }) do |collection|
         unless window
           # list node for our linked list of key value pairs
           def Node k,v
@@ -71,7 +76,6 @@ module Morel
                 n.prev = @last
                 @last = n
 
-
                 # and insert it at the correct place in our sorted list
                 if k>=@list[lst][:k]
                   if @list[:length] == :max && k>@list[lst][:k]
@@ -125,25 +129,10 @@ module Morel
             }
           }
         end
-        window.add(v[:vol],v)
-      }
-    end
-
-    def initialize params
-      @collection = params[:collection]
-      @size       = params[:size]
-      @block      = params[:block]
-    end
-
-    def each_top
-      unless @map
-        @map = Ruby2Js.new.process(@@code.to_code(@collection)).gsub(/window\(\)/,'window').gsub(/Node\(k, v\){/,'function Node(k, v){').gsub(/:max/,'max')
-        @collection.db.add_stored_function('hello',@map)
-        @map = "hello(this._id,this);"
+        window.add(this[:vol],this)
+      end.find.map do |rec|
+        yield rec
       end
-      reduce = "function(k,vals){ return 1; }"
-      testing = @collection.collection.map_reduce(@map, reduce, :out => 'testing', :scope => { :window => nil, :max => @size }) #, :out => "testing", :query => { :user => user })
-      testing.find.map{ |m| yield m; m }
     end
     
   end

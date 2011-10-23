@@ -21,19 +21,19 @@ describe Morel::Collection do
     res = @users.sorted_window(5){ |record| record['vol'] }.each_top do |rec|
       rec
     end
-    res.map{ |m| m['value'] }.should == [6,6,7]
+    res.find.map{ |m| m['value'] }.should == [6,6,7]
   end
 
   it 'should execute server-side queries' do
     @users.insert :name => 'Patrick'
     @users.insert :name => 'John'
     @users.insert :name => 'Doe'
-    people = @users.find(:query => lambda{
+    people = @users.find do
       if this[:name] == 'John'
         emit(this[:_id],this)
       end
-    }) do |person|
-      person
+    end.find.map do |person|
+      person 
     end
     people.size.should == 1
     people.first['value']['name'].should == 'John'
