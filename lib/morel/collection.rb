@@ -24,6 +24,21 @@ module Morel
     def first
       find_one
     end
+
+    def last
+      find_one(nil,:sort => [:_id, :desc])
+    end
+    
+    def find block
+      map = Ruby2Js.new.process(block.to_code(@collection)) #.gsub(/window\(\)/,'window').gsub(/Node\(k, v\){/,'function Node(k, v){').gsub(/:max/,'max')
+      pp map
+      #@collection.db.add_stored_function('foobar',"#{map};")
+      #map = "foobar(this);"
+      reduce = "function(k,vals){ return 1; }"
+      testing = @collection.map_reduce(map, reduce, :out => 'testing')
+      testing.find.map{ |m| yield m; m }
+      #testing.find.map{ |m| m }
+    end
     
     OPERATIONS = [
       :insert,
