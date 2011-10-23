@@ -24,4 +24,19 @@ describe Morel::Collection do
     res.map{ |m| m['value'] }.should == [6,6,7]
   end
 
+  it 'should execute server-side queries' do
+    @users.insert :name => 'Patrick'
+    @users.insert :name => 'John'
+    @users.insert :name => 'Doe'
+    people = @users.find(:query => lambda{
+      if this[:name] == 'John'
+        emit(this[:_id],this)
+      end
+    }) do |person|
+      person
+    end
+    people.size.should == 1
+    people.first['value']['name'].should == 'John'
+  end
+
 end
