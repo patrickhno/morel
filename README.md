@@ -6,16 +6,18 @@ Currently work in progress and not usefull to anyone.
 
 ## Example
 
-	[1,2,3,4,5,1,2,3,4,5,6,1,2,3,4,5,6,7].each do |v|
-	  @users.insert :vol => v
-	end
+``` ruby
+[1,2,3,4,5,1,2,3,4,5,6,1,2,3,4,5,6,7].each do |v|
+  @users.insert :vol => v
+end
 
-	res = @users.sorted_window(5){ |record| record['vol'] }.each_top do |rec|
-	  rec
-	end
+res = @users.sorted_window(5){ |record| record['vol'] }.each_top do |rec|
+  rec
+end
 
-	res.map{ |m| m['value'] }
-	# => [6,6,7]
+res.map{ |m| m['value'] }
+# => [6,6,7]
+```
 
 ## License
 
